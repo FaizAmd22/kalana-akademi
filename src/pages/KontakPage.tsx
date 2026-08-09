@@ -27,6 +27,7 @@ import { useKategori } from "@/hooks/useKategori";
 import { useSettings } from "@/hooks/useSettings";
 import { DEFAULT_WHATSAPP_NUMBER } from "@/lib/constants";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
+import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
 const kontakSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi"),
@@ -147,7 +148,7 @@ export function KontakPage() {
             />
 
             <Button type="submit" size="lg">
-              <MessageCircleIcon /> Kirim ke WhatsApp
+              <WhatsAppIcon className="size-4 shrink-0" /> Kirim ke WhatsApp
             </Button>
           </form>
         </Form>
