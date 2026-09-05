@@ -19,8 +19,8 @@ export function AdminDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm">
-            Program, Artikel, Bank Soal, FAQ, Testimoni, dan Galeri dapat
-            dikelola lewat menu di samping.
+            Program, Artikel, Bank Soal, FAQ, Testimoni, Event Kalana, dan
+            Galeri dapat dikelola lewat menu di samping.
           </CardContent>
         </Card>
         <Card>

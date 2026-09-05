@@ -1,4 +1,4 @@
-import heroImage from "@/assets/hero.png";
+import heroImage from "@/assets/images/hero_image.png";
 import { DaftarSekarangButton } from "@/components/shared/DaftarSekarangButton";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";

@@ -1,28 +1,29 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { MenuIcon } from "lucide-react"
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { MenuIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { DaftarSekarangButton } from "@/components/shared/DaftarSekarangButton"
-import { useNavMenu } from "@/hooks/useNavMenu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/accordion";
+import { DaftarSekarangButton } from "@/components/shared/DaftarSekarangButton";
+import { useNavMenu } from "@/hooks/useNavMenu";
+import { cn } from "@/lib/utils";
+import logoImage from "@/assets/logo/logo.png";
 
 export function MobileNav() {
-  const [open, setOpen] = useState(false)
-  const navMenu = useNavMenu()
+  const [open, setOpen] = useState(false);
+  const navMenu = useNavMenu();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -34,6 +35,11 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="w-4/5 max-w-xs">
         <SheetHeader>
+          <img
+            src={logoImage}
+            alt="Kalana Akademik"
+            className="w-10 h-10 rounded-full object-cover"
+          />
           <SheetTitle>Kalana Akademik</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
@@ -41,7 +47,7 @@ export function MobileNav() {
             item.items ? (
               <Accordion key={item.label}>
                 <AccordionItem value={item.label} className="border-none">
-                  <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
+                  <AccordionTrigger className="pl-2 py-2 text-sm font-medium hover:no-underline">
                     {item.label}
                   </AccordionTrigger>
                   <AccordionContent className="pb-0">
@@ -79,5 +85,5 @@ export function MobileNav() {
         </nav>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

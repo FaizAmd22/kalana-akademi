@@ -10,6 +10,8 @@ import { AdminArtikelListPage } from "@/pages/admin/artikel/ArtikelListPage"
 import { AdminBankSoalFormPage } from "@/pages/admin/banksoal/BankSoalFormPage"
 import { AdminBankSoalListPage } from "@/pages/admin/banksoal/BankSoalListPage"
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage"
+import { AdminEventFormPage } from "@/pages/admin/event/EventFormPage"
+import { AdminEventListPage } from "@/pages/admin/event/EventListPage"
 import { AdminFaqListPage } from "@/pages/admin/faq/FaqListPage"
 import { AdminGaleriFormPage } from "@/pages/admin/galeri/GaleriFormPage"
 import { AdminGaleriListPage } from "@/pages/admin/galeri/GaleriListPage"
@@ -99,6 +101,13 @@ function App() {
                 <Route
                   path="testimoni/:id/edit"
                   element={<AdminTestimoniFormPage />}
+                />
+
+                <Route path="event" element={<AdminEventListPage />} />
+                <Route path="event/baru" element={<AdminEventFormPage />} />
+                <Route
+                  path="event/:id/edit"
+                  element={<AdminEventFormPage />}
                 />
 
                 <Route path="galeri" element={<AdminGaleriListPage />} />

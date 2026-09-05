@@ -3,9 +3,18 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { Galeri } from "@/types";
+import type { KalanaEvent } from "@/types";
 
-export function GaleriGrid({ items }: { items: Galeri[] }) {
+function formatEventDate(value?: string) {
+  if (!value) return null;
+  return new Date(value).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+export function EventGrid({ items }: { items: KalanaEvent[] }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const selected = selectedIndex !== null ? items[selectedIndex] : null;
   const hasMultiple = items.length > 1;
@@ -45,14 +54,17 @@ export function GaleriGrid({ items }: { items: Galeri[] }) {
           >
             <img
               src={item.image}
-              alt={item.caption ?? "Galeri Kalana Akademik"}
+              alt={item.title}
               className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
             />
-            {item.caption && (
-              <p className="line-clamp-1 p-2 text-xs text-muted-foreground">
-                {item.caption}
-              </p>
-            )}
+            <div className="p-2">
+              <p className="line-clamp-1 text-xs font-medium">{item.title}</p>
+              {formatEventDate(item.eventDate) && (
+                <p className="text-[11px] text-muted-foreground">
+                  {formatEventDate(item.eventDate)}
+                </p>
+              )}
+            </div>
           </button>
         ))}
       </div>
@@ -67,7 +79,7 @@ export function GaleriGrid({ items }: { items: Galeri[] }) {
               <div className="relative flex items-center justify-center bg-black">
                 <img
                   src={selected.image}
-                  alt={selected.caption ?? "Galeri Kalana Akademik"}
+                  alt={selected.title}
                   className="max-h-[75vh] w-full object-contain"
                 />
                 {hasMultiple && (
@@ -95,11 +107,19 @@ export function GaleriGrid({ items }: { items: Galeri[] }) {
                   </>
                 )}
               </div>
-              {selected.caption && (
-                <p className="p-4 text-sm text-muted-foreground">
-                  {selected.caption}
-                </p>
-              )}
+              <div className="space-y-1 p-4">
+                <p className="font-medium">{selected.title}</p>
+                {formatEventDate(selected.eventDate) && (
+                  <p className="text-xs text-muted-foreground">
+                    {formatEventDate(selected.eventDate)}
+                  </p>
+                )}
+                {selected.description && (
+                  <p className="text-sm text-muted-foreground">
+                    {selected.description}
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </DialogContent>

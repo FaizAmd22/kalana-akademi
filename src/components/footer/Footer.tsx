@@ -11,6 +11,7 @@ import {
   DEFAULT_WHATSAPP_NUMBER,
 } from "@/lib/constants";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
+import logoImage from "@/assets/logo/logo.png";
 
 export function Footer() {
   const navMenu = useNavMenu();
@@ -28,7 +29,14 @@ export function Footer() {
     <footer className="border-t border-border bg-muted/40">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div className="space-y-2">
-          <p className="text-lg font-bold text-primary">Kalana Akademik</p>
+          <div>
+            <img
+              src={logoImage}
+              alt="Kalana Akademik"
+              className="w-40 h-4w-40 rounded-full object-cover"
+            />
+            <p className="text-lg font-bold text-primary">Kalana Akademik</p>
+          </div>
           <p className="text-sm text-muted-foreground">
             Bimbingan belajar SD, SMP, SMA, persiapan UTBK, dan olimpiade sains.
           </p>

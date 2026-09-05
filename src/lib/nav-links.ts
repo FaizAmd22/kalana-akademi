@@ -16,4 +16,5 @@ export const TENTANG_KAMI_ITEMS: NavLinkItem[] = [
   { label: "FAQ", href: "/tentang-kami#faq" },
   { label: "Testimoni", href: "/tentang-kami#testimoni" },
   { label: "Galeri", href: "/tentang-kami#galeri" },
+  { label: "Event Kalana", href: "/tentang-kami#event-kalana" },
 ]

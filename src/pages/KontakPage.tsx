@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { AnimateOnScroll } from "@/components/shared/AnimateOnScroll";
 import { SectionHeading } from "@/components/shared/SectionHeading";
+import { WhatsAppFloatButton } from "@/components/shared/WhatsAppFloatButton";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -152,6 +153,8 @@ export function KontakPage() {
           </form>
         </Form>
       </AnimateOnScroll>
+
+      <WhatsAppFloatButton />
     </div>
   );
 }

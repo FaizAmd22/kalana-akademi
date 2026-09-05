@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
 import {
   BookOpenIcon,
+  CalendarDaysIcon,
   FileTextIcon,
   GalleryHorizontalIcon,
   HelpCircleIcon,
@@ -35,6 +36,7 @@ const ADMIN_NAV = [
   { label: "Bank Soal", to: "/admin/bank-soal", icon: GalleryHorizontalIcon },
   { label: "FAQ", to: "/admin/faq", icon: HelpCircleIcon },
   { label: "Testimoni", to: "/admin/testimoni", icon: MessageSquareQuoteIcon },
+  { label: "Event Kalana", to: "/admin/event", icon: CalendarDaysIcon },
   { label: "Galeri", to: "/admin/galeri", icon: ImageIcon },
   { label: "Pengaturan", to: "/admin/pengaturan", icon: SettingsIcon },
 ]
