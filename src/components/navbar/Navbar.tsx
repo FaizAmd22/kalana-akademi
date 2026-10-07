@@ -31,8 +31,8 @@ export function Navbar() {
           </Link>
         </div>
 
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
+        <NavigationMenu className="hidden md:flex ">
+          <NavigationMenuList className="md:flex gap-1.5">
             {navMenu.map((item) =>
               item.items ? (
                 <NavDropdown key={item.label} {...item} />
