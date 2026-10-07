@@ -6,11 +6,14 @@ import {
   UsersIcon,
 } from "lucide-react";
 
-import heroImage from "@/assets/images/hero_image.png";
 import { DaftarSekarangButton } from "@/components/shared/DaftarSekarangButton";
 import { Button } from "@/components/ui/button";
 import { useParallax } from "@/hooks/use-parallax";
 import { STATISTIK } from "@/lib/constants";
+
+// served from /public under a fixed name so index.html can preload it (it is
+// the largest element on the landing page, i.e. the LCP image)
+const HERO_IMAGE = "/images/hero.webp";
 
 const HIGHLIGHTS = [
   "Tutor berpengalaman",
@@ -118,9 +121,15 @@ export function Hero() {
             className="absolute inset-[6%] rounded-full bg-linear-to-br from-sky-200/80 via-accent to-primary/10 ring-1 ring-primary/10"
           />
           <img
-            src={heroImage}
+            src={HERO_IMAGE}
             alt="Maskot Kalana Akademik sedang membaca buku"
-            className="relative w-full drop-shadow-xl motion-safe:animate-float"
+            // intrinsic size reserves the square before the file arrives, so
+            // the hero never collapses and then jumps when it loads
+            width={500}
+            height={500}
+            fetchPriority="high"
+            decoding="async"
+            className="relative h-auto w-full drop-shadow-xl motion-safe:animate-float"
           />
 
           {/* floating stat cards */}

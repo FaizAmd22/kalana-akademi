@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useKategori } from "@/hooks/useKategori"
-import { optimizeImage } from "@/lib/cloudinary"
+import { responsiveImage } from "@/lib/cloudinary"
 import type { Program } from "@/types"
 
 export function ProgramCard({ program }: { program: Program }) {
@@ -22,7 +22,11 @@ export function ProgramCard({ program }: { program: Program }) {
       <Card className="h-full pt-0 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-primary/10 group-hover:ring-primary/20">
         <div className="relative overflow-hidden">
           <img
-            src={optimizeImage(program.images[0], 800)}
+            {...responsiveImage(
+              program.images[0],
+              [400, 800],
+              "(min-width: 1024px) 370px, (min-width: 640px) 50vw, 85vw"
+            )}
             loading="lazy"
             decoding="async"
             alt={program.title}

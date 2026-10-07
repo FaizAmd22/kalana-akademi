@@ -75,6 +75,8 @@ export function PageHero({
               <img
                 src={image}
                 alt=""
+                width={80}
+                height={80}
                 className="size-20 shrink-0 rounded-2xl object-cover shadow-lg ring-4 ring-background md:hidden"
               />
             )}
@@ -90,7 +92,7 @@ export function PageHero({
             )}
             <div className="space-y-2">
               {eyebrow && (
-                <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-sky-600 uppercase dark:text-sky-400">
+                <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-sky-700 uppercase dark:text-sky-400">
                   <span aria-hidden className="h-0.5 w-6 rounded-full bg-current" />
                   {eyebrow}
                 </p>
@@ -118,6 +120,9 @@ export function PageHero({
               <img
                 src={image}
                 alt={imageAlt}
+                width={240}
+                height={240}
+                decoding="async"
                 className="relative size-full -rotate-3 rounded-[2rem] object-cover shadow-xl ring-4 ring-background transition-transform duration-500 hover:rotate-0"
               />
             </div>

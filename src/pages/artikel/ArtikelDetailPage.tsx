@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useArtikelById, useArtikelLatest } from "@/hooks/useArtikel"
 import { useKategori } from "@/hooks/useKategori"
-import { optimizeImage } from "@/lib/cloudinary"
+import { responsiveImage } from "@/lib/cloudinary"
 
 const WORDS_PER_MINUTE = 200
 
@@ -107,7 +107,7 @@ export function ArtikelDetailPage() {
         <article className="mx-auto max-w-3xl px-4 py-10 md:py-14">
           {artikel.image && (
             <img
-              src={optimizeImage(artikel.image, 1400)}
+              {...responsiveImage(artikel.image, [700, 1400], "(min-width: 768px) 720px, 100vw")}
               alt={artikel.title}
               className="aspect-video w-full rounded-2xl object-cover shadow-lg ring-1 ring-foreground/10"
             />

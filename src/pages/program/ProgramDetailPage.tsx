@@ -13,7 +13,7 @@ import { useKategori } from "@/hooks/useKategori"
 import { useAsyncData } from "@/hooks/use-async-data"
 import { useProgramById } from "@/hooks/useProgram"
 import { useSettings } from "@/hooks/useSettings"
-import { optimizeImage } from "@/lib/cloudinary"
+import { optimizeImage, responsiveImage } from "@/lib/cloudinary"
 import { DEFAULT_WHATSAPP_NUMBER } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { buildWhatsappUrl } from "@/lib/whatsapp"
@@ -92,7 +92,11 @@ export function ProgramDetailPage() {
             <div className="space-y-3">
               <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-foreground/10">
                 <img
-                  src={optimizeImage(images[activeImage] ?? images[0], 1400)}
+                  {...responsiveImage(
+                    images[activeImage] ?? images[0],
+                    [700, 1400],
+                    "(min-width: 1024px) 750px, 100vw"
+                  )}
                   alt={program.title}
                   className="aspect-video w-full object-cover"
                 />
@@ -144,7 +148,7 @@ export function ProgramDetailPage() {
                     key={point}
                     className="flex items-start gap-3 rounded-xl bg-card p-4 text-sm ring-1 ring-foreground/10"
                   >
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sky-500/15 text-sky-600">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sky-500/15 text-sky-700">
                       <CheckIcon className="size-3.5" />
                     </span>
                     {point}

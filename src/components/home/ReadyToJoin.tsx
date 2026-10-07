@@ -62,6 +62,10 @@ export function ReadyToJoin() {
             <img
               src={MASCOT.siapGabung}
               alt="Maskot Kalana Akademik melambaikan tangan di atas planet"
+              width={208}
+              height={208}
+              loading="lazy"
+              decoding="async"
               className="relative size-52 rounded-full object-cover shadow-2xl ring-8 ring-primary-foreground/10"
             />
           </div>

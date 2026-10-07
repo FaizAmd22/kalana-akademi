@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useKategori } from "@/hooks/useKategori"
-import { optimizeImage } from "@/lib/cloudinary"
+import { responsiveImage } from "@/lib/cloudinary"
 import type { Artikel } from "@/types"
 
 export function ArtikelCard({ artikel }: { artikel: Artikel }) {
@@ -22,7 +22,11 @@ export function ArtikelCard({ artikel }: { artikel: Artikel }) {
       <Card className="h-full pt-0 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-primary/10 group-hover:ring-primary/20">
         <div className="relative overflow-hidden">
           <img
-            src={optimizeImage(artikel.image, 800)}
+            {...responsiveImage(
+              artikel.image,
+              [400, 800],
+              "(min-width: 1024px) 280px, (min-width: 640px) 50vw, 80vw"
+            )}
             loading="lazy"
             decoding="async"
             alt={artikel.title}

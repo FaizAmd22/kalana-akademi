@@ -5,7 +5,6 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import heroImage from "@/assets/images/hero_image.png"
 import { WhyChooseUs } from "@/components/home/WhyChooseUs"
 import { TentangKamiShell } from "@/components/shared/TentangKamiShell"
 import { STATISTIK } from "@/lib/constants"
@@ -70,9 +69,12 @@ export function ProfilPage() {
             className="absolute inset-[6%] rounded-full bg-linear-to-br from-sky-200/80 via-accent to-primary/10 ring-1 ring-primary/10"
           />
           <img
-            src={heroImage}
+            src="/images/hero.webp"
             alt="Maskot Kalana Akademik"
-            className="relative w-full drop-shadow-xl motion-safe:animate-float"
+            width={500}
+            height={500}
+            decoding="async"
+            className="relative h-auto w-full drop-shadow-xl motion-safe:animate-float"
           />
         </div>
       </div>

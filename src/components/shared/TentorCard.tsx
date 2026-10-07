@@ -1,7 +1,7 @@
 import { GraduationCapIcon, UserIcon } from "lucide-react"
 
 import { useKategori } from "@/hooks/useKategori"
-import { optimizeImage } from "@/lib/cloudinary"
+import { responsiveImage } from "@/lib/cloudinary"
 import type { Tentor } from "@/types"
 
 // more than this many role chips would cover the photo on narrow cards
@@ -26,7 +26,11 @@ export function TentorCard({ tentor }: { tentor: Tentor }) {
       <div className="relative aspect-[4/5] overflow-hidden bg-linear-to-br from-accent via-sky-100 to-primary/15">
         {tentor.image ? (
           <img
-            src={optimizeImage(tentor.image, 500)}
+            {...responsiveImage(
+              tentor.image,
+              [250, 500],
+              "(min-width: 1024px) 210px, (min-width: 768px) 25vw, 42vw"
+            )}
             alt={tentor.name}
             loading="lazy"
             className="size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"

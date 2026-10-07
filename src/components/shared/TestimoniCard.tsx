@@ -1,6 +1,7 @@
 import { QuoteIcon, StarIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { optimizeImage } from "@/lib/cloudinary"
 import { cn } from "@/lib/utils"
 import type { Testimoni } from "@/types"
 
@@ -20,7 +21,11 @@ export function TestimoniCard({ testimoni }: { testimoni: Testimoni }) {
       />
 
       {testimoni.rating ? (
-        <div className="flex gap-0.5" aria-label={`Rating ${testimoni.rating} dari 5`}>
+        <div
+          className="flex gap-0.5"
+          role="img"
+          aria-label={`Rating ${testimoni.rating} dari 5`}
+        >
           {Array.from({ length: 5 }).map((_, i) => (
             <StarIcon
               key={i}
@@ -41,7 +46,12 @@ export function TestimoniCard({ testimoni }: { testimoni: Testimoni }) {
 
       <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
         <Avatar className="size-10 ring-2 ring-accent">
-          <AvatarImage src={testimoni.image} alt={testimoni.name} />
+          <AvatarImage
+            src={optimizeImage(testimoni.image, 96)}
+            // the name is printed right next to the avatar
+            alt=""
+            loading="lazy"
+          />
           <AvatarFallback className="bg-accent font-semibold text-primary">
             {initials}
           </AvatarFallback>

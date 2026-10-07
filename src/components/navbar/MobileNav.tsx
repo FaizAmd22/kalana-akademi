@@ -31,7 +31,7 @@ import { DaftarSekarangButton } from "@/components/shared/DaftarSekarangButton";
 import { useNavMenu } from "@/hooks/useNavMenu";
 import type { NavMenuItem } from "@/lib/nav-links";
 import { cn } from "@/lib/utils";
-import logoImage from "@/assets/logo/logo.png";
+import logoImage from "@/assets/logo/logo.webp";
 
 const MENU_ICONS: Record<string, LucideIcon> = {
   Home: HouseIcon,
@@ -91,6 +91,8 @@ export function MobileNav() {
           <img
             src={logoImage}
             alt=""
+            width={40}
+            height={40}
             className="size-10 shrink-0 rounded-full object-cover"
           />
           <div className="min-w-0">

@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 
 import { Lightbox } from "@/components/shared/Lightbox";
-import { optimizeImage } from "@/lib/cloudinary";
+import { responsiveImage } from "@/lib/cloudinary";
 import { cn } from "@/lib/utils";
 import type { Galeri } from "@/types";
 
 // grid cells are at most ~280px wide; 2x for sharp retina thumbnails
 const THUMB_WIDTH = 600;
+// rendered width per breakpoint (2/3/4 columns inside the 6xl container)
+const THUMB_SIZES =
+  "(min-width: 1152px) 280px, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw";
 
 export function GaleriGrid({
   items,
@@ -44,8 +47,9 @@ export function GaleriGrid({
             className="group overflow-hidden rounded-xl bg-transparent text-left ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-ring hover:cursor-pointer"
           >
             <img
-              src={optimizeImage(item.image, THUMB_WIDTH)}
-              alt={item.caption ?? "Galeri Kalana Akademik"}
+              {...responsiveImage(item.image, [300, THUMB_WIDTH], THUMB_SIZES)}
+              // the caption under the photo already describes it
+              alt={item.caption ? "" : "Galeri Kalana Akademik"}
               loading="lazy"
               decoding="async"
               className="aspect-square w-full object-cover transition-transform group-hover:scale-105"

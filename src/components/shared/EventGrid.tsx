@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 
 import { Lightbox } from "@/components/shared/Lightbox";
-import { optimizeImage } from "@/lib/cloudinary";
+import { responsiveImage } from "@/lib/cloudinary";
 import { cn } from "@/lib/utils";
 import type { KalanaEvent } from "@/types";
 
 // grid cells are at most ~280px wide; 2x for sharp retina thumbnails
 const THUMB_WIDTH = 600;
+// rendered width per breakpoint (2/3/4 columns inside the 6xl container)
+const THUMB_SIZES =
+  "(min-width: 1152px) 280px, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw";
 
 function formatEventDate(value?: string) {
   if (!value) return null;
@@ -65,7 +68,7 @@ export function EventGrid({
             className="group overflow-hidden rounded-xl bg-card text-left text-card-foreground ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-ring hover:cursor-pointer"
           >
             <img
-              src={optimizeImage(item.image, THUMB_WIDTH)}
+              {...responsiveImage(item.image, [300, THUMB_WIDTH], THUMB_SIZES)}
               alt={item.title}
               loading="lazy"
               decoding="async"

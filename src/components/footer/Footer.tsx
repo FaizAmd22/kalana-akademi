@@ -14,7 +14,7 @@ import {
 import { TENTANG_KAMI_PAGES, type NavMenuItem } from "@/lib/nav-links";
 import { instagramHandle } from "@/lib/social";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
-import logoImage from "@/assets/logo/logo.png";
+import logoImage from "@/assets/logo/logo.webp";
 
 // Dropdown groups link to their "see all" page rather than the first category.
 function topLevelHref(item: NavMenuItem) {
@@ -97,6 +97,9 @@ export function Footer() {
               <img
                 src={logoImage}
                 alt=""
+                width={48}
+                height={48}
+                loading="lazy"
                 className="size-full rounded-full object-cover"
               />
             </span>

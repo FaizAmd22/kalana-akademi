@@ -12,7 +12,7 @@ import { useNavMenu } from "@/hooks/useNavMenu";
 import { cn } from "@/lib/utils";
 import { NavDropdown } from "./NavDropdown";
 import { MobileNav } from "./MobileNav";
-import logoImage from "@/assets/logo/logo.png";
+import logoImage from "@/assets/logo/logo.webp";
 
 export function Navbar() {
   const navMenu = useNavMenu();
@@ -24,6 +24,9 @@ export function Navbar() {
           <img
             src={logoImage}
             alt="Kalana Akademik"
+            width={48}
+            height={48}
+            fetchPriority="high"
             className="w-12 h-12 rounded-full object-cover"
           />
           <Link to="/" className="text-md font-bold text-primary">

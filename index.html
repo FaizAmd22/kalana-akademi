@@ -4,6 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- open connections to the data and image hosts while the JS loads -->
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <script>
+      // Landing page only: start downloading the hero (LCP) image right away
+      // instead of after the JS bundle has run and rendered it.
+      if (location.pathname === "/") {
+        var hero = document.createElement("link")
+        hero.rel = "preload"
+        hero.as = "image"
+        hero.type = "image/webp"
+        hero.href = "/images/hero.webp"
+        hero.fetchPriority = "high"
+        document.head.appendChild(hero)
+      }
+    </script>
     <meta
       name="description"
       content="Kalana Akademik — bimbingan belajar SD, SMP, SMA, persiapan UTBK, dan olimpiade sains."
