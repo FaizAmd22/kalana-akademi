@@ -9,6 +9,7 @@ export function TentorPage() {
 
   return (
     <TentangKamiShell
+      slug="tentor"
       title="Tentor Kalana"
       description="Kenali tentor-tentor yang akan mendampingi belajarmu."
     >

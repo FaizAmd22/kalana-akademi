@@ -34,7 +34,10 @@ export function TentorDirectory({ tentors }: { tentors: Tentor[] }) {
 
   return (
     <div>
-      <StickyFilterBar className="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
+      <StickyFilterBar
+        className="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between"
+        scrollKey={`${role ?? ""}|${search.trim()}`}
+      >
         {/* single scrollable row on mobile keeps the sticky bar short */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
           {roleOptions.map((option) => (
@@ -73,7 +76,7 @@ export function TentorDirectory({ tentors }: { tentors: Tentor[] }) {
           />
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="stagger mt-4 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-4 lg:grid-cols-5">
           {filtered.map((tentor) => (
             <TentorCard key={tentor.id} tentor={tentor} />
           ))}

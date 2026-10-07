@@ -13,12 +13,40 @@ const NAVBAR_OFFSET_PX = 57
 export function StickyFilterBar({
   children,
   className,
+  scrollKey,
 }: {
   children: ReactNode
   className?: string
+  /**
+   * Identifies the active filter. When it changes while the user has
+   * scrolled past the start of the list, the page scrolls back so the bar
+   * sits under the navbar with the first results right below it — instead
+   * of leaving them looking at the bottom of a now-shorter list.
+   */
+  scrollKey?: string
 }) {
   const sentinelRef = useRef<HTMLDivElement>(null)
   const [stuck, setStuck] = useState(false)
+  const previousKey = useRef(scrollKey)
+
+  useEffect(() => {
+    if (scrollKey === previousKey.current) return
+    previousKey.current = scrollKey
+
+    const el = sentinelRef.current
+    if (!el) return
+    const top = el.getBoundingClientRect().top
+    // already at or above the list start: nothing to bring into view
+    if (top >= NAVBAR_OFFSET_PX) return
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+    window.scrollTo({
+      top: window.scrollY + top - NAVBAR_OFFSET_PX,
+      behavior: reduceMotion ? "auto" : "smooth",
+    })
+  }, [scrollKey])
 
   // a zero-height marker right above the bar: once it scrolls under the
   // navbar, the bar is stuck and gets a divider so it reads as a toolbar
