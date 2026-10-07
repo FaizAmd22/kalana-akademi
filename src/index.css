@@ -47,6 +47,18 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-float-delayed: float 6s ease-in-out 3s infinite;
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
 }
 
 :root {
@@ -123,4 +135,87 @@
   html {
     @apply font-sans;
     }
+}
+/*
+ * Softer scroll reveals. animate.css's fadeInUp slides an element by 100% of
+ * its own height (huge for a whole card grid) and zoomIn starts at 30% scale;
+ * these keep the same class names but move only a little.
+ */
+@keyframes kalana-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kalana-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* per-card reveal: a short rise that comes into focus */
+@keyframes kalana-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.98);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.animate__animated.animate__fadeInUp {
+  animation-name: kalana-fade-in-up;
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate__animated.animate__zoomIn {
+  animation-name: kalana-zoom-in;
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/*
+ * Staggered children: put `stagger` on a grid inside AnimateOnScroll and the
+ * cards appear one after another once the section scrolls into view. Delays
+ * repeat every 9 items so cards added by "load more" stagger as a batch
+ * instead of waiting behind the ones already shown.
+ */
+.stagger > * {
+  opacity: 0;
+}
+
+.animate__animated .stagger > * {
+  animation: kalana-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate__animated .stagger > :nth-child(9n + 2) { animation-delay: 70ms; }
+.animate__animated .stagger > :nth-child(9n + 3) { animation-delay: 140ms; }
+.animate__animated .stagger > :nth-child(9n + 4) { animation-delay: 210ms; }
+.animate__animated .stagger > :nth-child(9n + 5) { animation-delay: 280ms; }
+.animate__animated .stagger > :nth-child(9n + 6) { animation-delay: 350ms; }
+.animate__animated .stagger > :nth-child(9n + 7) { animation-delay: 420ms; }
+.animate__animated .stagger > :nth-child(9n + 8) { animation-delay: 490ms; }
+.animate__animated .stagger > :nth-child(9n + 9) { animation-delay: 560ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger > *,
+  .animate__animated .stagger > * {
+    opacity: 1;
+    animation: none;
+  }
 }
