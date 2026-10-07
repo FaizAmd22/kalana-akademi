@@ -2,13 +2,23 @@ import { orderBy } from "firebase/firestore"
 
 import { useAsyncData } from "@/hooks/use-async-data"
 import { useLiveCollection } from "@/hooks/use-live-collection"
+import { usePaginatedList } from "@/hooks/use-paginated-list"
 import { programService } from "@/services/program.service"
 import type { Program } from "@/types"
 
-export function useProgramList(label?: string) {
-  return useAsyncData(
-    () => (label ? programService.listByLabel(label) : programService.listAll()),
-    [label]
+export function useProgramList() {
+  return useAsyncData(() => programService.listAll(), [])
+}
+
+export function useProgramPages(
+  label: string | undefined,
+  pageSize: number,
+  search?: string
+) {
+  return usePaginatedList(
+    (cursor) => programService.page(label, pageSize, cursor, search),
+    () => programService.countByLabel(label, search),
+    [label, pageSize, search]
   )
 }
 

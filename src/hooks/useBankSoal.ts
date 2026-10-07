@@ -1,15 +1,19 @@
 import { orderBy } from "firebase/firestore"
 
-import { useAsyncData } from "@/hooks/use-async-data"
 import { useLiveCollection } from "@/hooks/use-live-collection"
+import { usePaginatedList } from "@/hooks/use-paginated-list"
 import { banksoalService } from "@/services/banksoal.service"
 import type { BankSoal } from "@/types"
 
-export function useBankSoalList(label?: string) {
-  return useAsyncData(
-    () =>
-      label ? banksoalService.listByLabel(label) : banksoalService.listAll(),
-    [label]
+export function useBankSoalPages(
+  label: string | undefined,
+  pageSize: number,
+  search?: string
+) {
+  return usePaginatedList(
+    (cursor) => banksoalService.page(label, pageSize, cursor, search),
+    () => banksoalService.countByLabel(label, search),
+    [label, pageSize, search]
   )
 }
 

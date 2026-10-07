@@ -2,16 +2,19 @@ import { orderBy } from "firebase/firestore"
 
 import { useAsyncData } from "@/hooks/use-async-data"
 import { useLiveCollection } from "@/hooks/use-live-collection"
+import { usePaginatedList } from "@/hooks/use-paginated-list"
 import { artikelService } from "@/services/artikel.service"
 import type { Artikel } from "@/types"
 
-export function useArtikelList(kategori?: string) {
-  return useAsyncData(
-    () =>
-      kategori
-        ? artikelService.listByKategori(kategori)
-        : artikelService.listAll(),
-    [kategori]
+export function useArtikelPages(
+  kategori: string | undefined,
+  pageSize: number,
+  search?: string
+) {
+  return usePaginatedList(
+    (cursor) => artikelService.page(kategori, pageSize, cursor, search),
+    () => artikelService.countByKategori(kategori, search),
+    [kategori, pageSize, search]
   )
 }
 
