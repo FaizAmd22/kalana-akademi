@@ -11,6 +11,7 @@ import { ReadyToJoin } from "@/components/home/ReadyToJoin"
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon"
 import { AnimateOnScroll } from "@/components/shared/AnimateOnScroll"
 import { ArtikelCard } from "@/components/shared/ArtikelCard"
+import { CardCarousel } from "@/components/shared/CardCarousel"
 import { PageHero } from "@/components/shared/PageHero"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,13 +20,14 @@ import { useKategori } from "@/hooks/useKategori"
 import { responsiveImage } from "@/lib/cloudinary"
 
 const WORDS_PER_MINUTE = 200
+const OTHERS_COUNT = 6
 
 export function ArtikelDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { getLabel } = useKategori()
   const { data: artikel, loading } = useArtikelById(id)
-  // one extra so there are still 3 after leaving out the current article
-  const { data: latest } = useArtikelLatest(4)
+  // one extra so the count holds after leaving out the current article
+  const { data: latest } = useArtikelLatest(OTHERS_COUNT + 1)
 
   if (loading) {
     return (
@@ -64,7 +66,7 @@ export function ArtikelDetailPage() {
     .split(/\n\s*\n/)
     .map((p) => p.trim())
     .filter(Boolean)
-  const others = (latest ?? []).filter((a) => a.id !== artikel.id).slice(0, 3)
+  const others = (latest ?? []).filter((a) => a.id !== artikel.id).slice(0, OTHERS_COUNT)
 
   const pageUrl = window.location.href
   const shareUrl = `https://wa.me/?text=${encodeURIComponent(`${artikel.title} — ${pageUrl}`)}`
@@ -162,10 +164,12 @@ export function ArtikelDetailPage() {
                 Lihat semua <ArrowRightIcon className="size-4" />
               </Link>
             </div>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {others.map((a) => (
-                <ArtikelCard key={a.id} artikel={a} />
-              ))}
+            <div className="mt-3">
+              <CardCarousel label="Artikel lainnya">
+                {others.map((a) => (
+                  <ArtikelCard key={a.id} artikel={a} />
+                ))}
+              </CardCarousel>
             </div>
           </div>
         </section>
