@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Lightbox } from "@/components/shared/Lightbox";
+import { optimizeImage } from "@/lib/cloudinary";
+import { cn } from "@/lib/utils";
 import type { KalanaEvent } from "@/types";
+
+// grid cells are at most ~280px wide; 2x for sharp retina thumbnails
+const THUMB_WIDTH = 600;
 
 function formatEventDate(value?: string) {
   if (!value) return null;
@@ -14,47 +17,58 @@ function formatEventDate(value?: string) {
   });
 }
 
-export function EventGrid({ items }: { items: KalanaEvent[] }) {
+export function EventGrid({
+  items,
+  className,
+}: {
+  items: KalanaEvent[];
+  className?: string;
+}) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const selected = selectedIndex !== null ? items[selectedIndex] : null;
-  const hasMultiple = items.length > 1;
-
-  function showPrev() {
-    setSelectedIndex((i) =>
-      i === null ? null : (i - 1 + items.length) % items.length
-    );
-  }
-
-  function showNext() {
-    setSelectedIndex((i) => (i === null ? null : (i + 1) % items.length));
-  }
-
-  useEffect(() => {
-    if (selectedIndex === null) return;
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "ArrowLeft") showPrev();
-      if (e.key === "ArrowRight") showNext();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIndex]);
+  const lightboxItems = useMemo(
+    () =>
+      items.map((item) => ({
+        image: item.image,
+        alt: item.title,
+        details: (
+          <div className="space-y-1">
+            <p className="font-medium">{item.title}</p>
+            {formatEventDate(item.eventDate) && (
+              <p className="text-xs text-muted-foreground">
+                {formatEventDate(item.eventDate)}
+              </p>
+            )}
+            {item.description && (
+              <p className="text-sm text-muted-foreground">
+                {item.description}
+              </p>
+            )}
+          </div>
+        ),
+      })),
+    [items]
+  );
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      <div
+        className={cn(
+          "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4",
+          className
+        )}
+      >
         {items.map((item, index) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setSelectedIndex(index)}
-            className="group overflow-hidden rounded-xl bg-transparent text-left ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-ring hover:cursor-pointer"
+            className="group overflow-hidden rounded-xl bg-card text-left text-card-foreground ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-ring hover:cursor-pointer"
           >
             <img
-              src={item.image}
+              src={optimizeImage(item.image, THUMB_WIDTH)}
               alt={item.title}
+              loading="lazy"
+              decoding="async"
               className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
             />
             <div className="p-2">
@@ -69,61 +83,12 @@ export function EventGrid({ items }: { items: KalanaEvent[] }) {
         ))}
       </div>
 
-      <Dialog
-        open={selected !== null}
-        onOpenChange={(open) => !open && setSelectedIndex(null)}
-      >
-        <DialogContent className="max-w-3xl gap-0 overflow-hidden p-0 sm:max-w-3xl">
-          {selected && (
-            <div>
-              <div className="relative flex items-center justify-center bg-black">
-                <img
-                  src={selected.image}
-                  alt={selected.title}
-                  className="max-h-[75vh] w-full object-contain"
-                />
-                {hasMultiple && (
-                  <>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/2 left-2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                      onClick={showPrev}
-                    >
-                      <ChevronLeftIcon />
-                      <span className="sr-only">Sebelumnya</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1/2 right-2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                      onClick={showNext}
-                    >
-                      <ChevronRightIcon />
-                      <span className="sr-only">Berikutnya</span>
-                    </Button>
-                  </>
-                )}
-              </div>
-              <div className="space-y-1 p-4">
-                <p className="font-medium">{selected.title}</p>
-                {formatEventDate(selected.eventDate) && (
-                  <p className="text-xs text-muted-foreground">
-                    {formatEventDate(selected.eventDate)}
-                  </p>
-                )}
-                {selected.description && (
-                  <p className="text-sm text-muted-foreground">
-                    {selected.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <Lightbox
+        index={selectedIndex}
+        onIndexChange={setSelectedIndex}
+        onClose={() => setSelectedIndex(null)}
+        items={lightboxItems}
+      />
     </>
   );
 }
