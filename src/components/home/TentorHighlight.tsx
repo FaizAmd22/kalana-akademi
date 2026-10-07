@@ -30,7 +30,7 @@ export function TentorHighlight() {
         </Link>
       </div>
 
-      <div className="mt-6 grid grid-cols-3 gap-5 sm:gap-7 md:grid-cols-4 lg:grid-cols-5">
+      <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-7 md:grid-cols-4 lg:grid-cols-5">
         {loading
           ? Array.from({ length: MAX_DISPLAYED }).map((_, i) => (
               <Skeleton key={i} className="aspect-[3/4] w-full" />
