@@ -6,6 +6,8 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog"
+import { DragHandle, SortableRow } from "@/components/admin/SortableRow"
+import { SortableTableBody } from "@/components/admin/SortableTableBody"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,23 +26,16 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
 import { useAdminFaqList } from "@/hooks/useFaq"
+import { toOrderPayload } from "@/lib/reorder"
 import { faqService } from "@/services/faq.service"
 import type { Faq } from "@/types"
 
 const faqSchema = z.object({
   question: z.string().min(1, "Pertanyaan wajib diisi"),
   answer: z.string().min(1, "Jawaban wajib diisi"),
-  order: z.string(),
 })
 
 type FaqFormValues = z.infer<typeof faqSchema>
@@ -53,14 +48,13 @@ export function AdminFaqListPage() {
 
   const form = useForm<FaqFormValues>({
     resolver: zodResolver(faqSchema),
-    defaultValues: { question: "", answer: "", order: "0" },
+    defaultValues: { question: "", answer: "" },
   })
 
   useEffect(() => {
     form.reset({
       question: editing?.question ?? "",
       answer: editing?.answer ?? "",
-      order: String(editing?.order ?? 0),
     })
   }, [editing, form])
 
@@ -76,17 +70,13 @@ export function AdminFaqListPage() {
 
   async function onSubmit(values: FaqFormValues) {
     setSubmitting(true)
-    const payload = {
-      question: values.question,
-      answer: values.answer,
-      order: Number(values.order) || 0,
-    }
     try {
       if (editing) {
-        await faqService.update(editing.id, payload)
+        await faqService.update(editing.id, values)
         toast.success("FAQ berhasil diperbarui")
       } else {
-        await faqService.create(payload)
+        // append to the end; exact position is fixed by drag-and-drop in the list
+        await faqService.create({ ...values, order: Date.now() })
         toast.success("FAQ berhasil ditambahkan")
       }
       setOpen(false)
@@ -103,6 +93,14 @@ export function AdminFaqListPage() {
       toast.success("FAQ berhasil dihapus")
     } catch {
       toast.error("Gagal menghapus FAQ")
+    }
+  }
+
+  async function handleReorder(reordered: Faq[]) {
+    try {
+      await faqService.updateOrder(toOrderPayload(reordered))
+    } catch {
+      toast.error("Gagal menyimpan urutan FAQ")
     }
   }
 
@@ -128,16 +126,18 @@ export function AdminFaqListPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8" />
               <TableHead>Pertanyaan</TableHead>
-              <TableHead className="w-16">Urutan</TableHead>
               <TableHead className="w-24 text-right">Aksi</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <SortableTableBody items={faqs} onReorder={handleReorder}>
             {faqs.map((faq) => (
-              <TableRow key={faq.id}>
+              <SortableRow key={faq.id} id={faq.id}>
+                <TableCell>
+                  <DragHandle />
+                </TableCell>
                 <TableCell className="font-medium">{faq.question}</TableCell>
-                <TableCell>{faq.order ?? 0}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     <Button
@@ -156,9 +156,9 @@ export function AdminFaqListPage() {
                     </ConfirmDeleteDialog>
                   </div>
                 </TableCell>
-              </TableRow>
+              </SortableRow>
             ))}
-          </TableBody>
+          </SortableTableBody>
         </Table>
       )}
 
@@ -190,19 +190,6 @@ export function AdminFaqListPage() {
                     <FormLabel>Jawaban</FormLabel>
                     <FormControl>
                       <Textarea rows={3} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="order"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Urutan</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
