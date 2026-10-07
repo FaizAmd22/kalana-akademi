@@ -1,17 +1,29 @@
 import { useEffect, useRef } from "react"
 
-type Updater = () => void
+/** Measures (reads layout) and returns the DOM write to apply, if any. */
+type Updater = () => (() => void) | void
 
 // One shared, rAF-throttled scroll/resize listener for every parallax element
 // on the page instead of one listener per element.
 const updaters = new Set<Updater>()
 let frame = 0
 
+function runFrame() {
+  // all reads first, then all writes: interleaving them would force the
+  // browser to recalculate layout once per element ("forced reflow")
+  const writes: (() => void)[] = []
+  updaters.forEach((measure) => {
+    const write = measure()
+    if (write) writes.push(write)
+  })
+  writes.forEach((write) => write())
+}
+
 function schedule() {
   if (frame) return
   frame = requestAnimationFrame(() => {
     frame = 0
-    updaters.forEach((update) => update())
+    runFrame()
   })
 }
 
@@ -21,7 +33,7 @@ function subscribe(update: Updater) {
     window.addEventListener("resize", schedule)
   }
   updaters.add(update)
-  update()
+  update()?.()
   return () => {
     updaters.delete(update)
     if (updaters.size === 0) {
@@ -54,10 +66,6 @@ export function useParallax<T extends HTMLElement>(
     if (!el) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
-    // keep the element on its own compositor layer (blurred blobs are
-    // expensive to repaint on every scroll frame otherwise)
-    el.style.willChange = "translate"
-
     const widthQuery = minWidth
       ? window.matchMedia(`(min-width: ${minWidth}px)`)
       : null
@@ -66,11 +74,12 @@ export function useParallax<T extends HTMLElement>(
     const unsubscribe = subscribe(() => {
       // checked on every update so resizing across the breakpoint works
       if (widthQuery && !widthQuery.matches) {
-        if (offset !== 0) {
-          offset = 0
+        if (offset === 0) return
+        offset = 0
+        return () => {
           el.style.translate = ""
+          el.style.willChange = ""
         }
-        return
       }
 
       const rect = el.getBoundingClientRect()
@@ -83,8 +92,15 @@ export function useParallax<T extends HTMLElement>(
       const fromCentre = top + rect.height / 2 - viewport / 2
       // scrolling moves the element up by d; shifting it back by d * speed
       // makes it travel at (1 - speed) of the scroll rate
-      offset = Math.round(-fromCentre * speed * 10) / 10
-      el.style.translate = `0 ${offset}px`
+      const next = Math.round(-fromCentre * speed * 10) / 10
+      if (next === offset) return
+      offset = next
+      return () => {
+        el.style.translate = `0 ${next}px`
+        // own compositor layer while moving (blurred blobs are expensive to
+        // repaint every frame); only set when the effect is actually active
+        el.style.willChange = "translate"
+      }
     })
 
     return () => {

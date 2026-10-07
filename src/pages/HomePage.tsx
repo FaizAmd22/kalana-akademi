@@ -21,9 +21,11 @@ import bgSection2 from "@/assets/images/bg-section-2.webp";
 export function HomePage() {
   return (
     <>
-      <AnimateOnScroll animation="fadeIn">
+      {/* above the fold: fade in straight away instead of waiting for an
+          IntersectionObserver callback, so the main content paints sooner */}
+      <div className="animate__animated animate__fadeIn [animation-duration:0.6s]">
         <Hero />
-      </AnimateOnScroll>
+      </div>
       <AnimateOnScroll animation="fadeInUp">
         <StatistikBar />
       </AnimateOnScroll>
