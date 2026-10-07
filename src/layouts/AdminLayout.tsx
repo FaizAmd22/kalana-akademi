@@ -43,7 +43,7 @@ const ADMIN_NAV = [
 
 function AdminNavLinks({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <nav className="flex flex-1 flex-col gap-0.5 px-2">
+    <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
       {ADMIN_NAV.map(({ label, to, icon: Icon, end }) => (
         <NavLink
           key={to}
@@ -79,7 +79,8 @@ export function AdminLayout() {
 
   return (
     <div className="flex min-h-svh">
-      <aside className="hidden w-56 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex md:flex-col">
+      {/* sticky so the sidebar stays put while the page content scrolls */}
+      <aside className="sticky top-0 hidden h-svh w-56 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex md:flex-col">
         <div className="px-4 py-4 text-base font-bold text-sidebar-primary">
           Kalana Akademik
         </div>
@@ -87,7 +88,7 @@ export function AdminLayout() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between gap-2 border-b border-border px-4">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-2 border-b border-border bg-background px-4">
           <div className="flex min-w-0 items-center gap-1">
             <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
               <SheetTrigger
