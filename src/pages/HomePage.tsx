@@ -4,6 +4,7 @@ import { GaleriHighlight } from "@/components/home/GaleriHighlight";
 import { Hero } from "@/components/home/Hero";
 import { ProgramHighlight } from "@/components/home/ProgramHighlight";
 import { ReadyToJoin } from "@/components/home/ReadyToJoin";
+import { TentorHighlight } from "@/components/home/TentorHighlight";
 import { TestimoniStatistik } from "@/components/home/TestimoniStatistik";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { ArtikelTerbaru } from "@/components/home/ArtikelTerbaru";
@@ -19,6 +20,9 @@ export function HomePage() {
       </AnimateOnScroll>
       <AnimateOnScroll animation="fadeInUp">
         <ProgramHighlight />
+      </AnimateOnScroll>
+      <AnimateOnScroll animation="fadeInUp">
+        <TentorHighlight />
       </AnimateOnScroll>
       <AnimateOnScroll animation="fadeInUp">
         <GaleriHighlight />
