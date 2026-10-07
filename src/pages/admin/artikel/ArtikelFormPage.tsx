@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -23,16 +23,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { useArtikelById } from "@/hooks/useArtikel"
 import { useKategori } from "@/hooks/useKategori"
+import { toPlainText } from "@/lib/rich-text"
 import { artikelService } from "@/services/artikel.service"
+
+// Tiptap is large; load it only when an article form is opened
+const RichTextEditor = lazy(() => import("@/components/admin/RichTextEditor"))
 
 const artikelSchema = z.object({
   kategori: z.string().min(1, "Kategori wajib dipilih"),
   title: z.string().min(1, "Judul wajib diisi"),
   image: z.string().min(1, "Gambar wajib diunggah"),
-  description: z.string().min(1, "Deskripsi wajib diisi"),
+  // HTML from the editor, so check that it contains actual text
+  description: z
+    .string()
+    .refine(
+      (html) => toPlainText(html).length > 0 || /<img\s/i.test(html),
+      "Isi artikel wajib diisi"
+    ),
 })
 
 type ArtikelFormValues = z.infer<typeof artikelSchema>
@@ -92,7 +101,7 @@ export function AdminArtikelFormPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-4">
+    <div className="max-w-3xl space-y-4">
       <h1 className="text-xl font-semibold">
         {isEdit ? "Edit Artikel" : "Tambah Artikel"}
       </h1>
@@ -166,12 +175,23 @@ export function AdminArtikelFormPage() {
           <FormField
             control={form.control}
             name="description"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Deskripsi</FormLabel>
-                <FormControl>
-                  <Textarea rows={4} {...field} />
-                </FormControl>
+                <FormLabel>Isi Artikel</FormLabel>
+                <Suspense
+                  fallback={
+                    <div className="flex min-h-96 items-center justify-center rounded-lg border border-input text-sm text-muted-foreground">
+                      Memuat editor...
+                    </div>
+                  }
+                >
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    folder="artikels"
+                    invalid={fieldState.invalid}
+                  />
+                </Suspense>
                 <FormMessage />
               </FormItem>
             )}
