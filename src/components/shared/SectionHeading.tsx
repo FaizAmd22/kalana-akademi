@@ -30,7 +30,7 @@ export function SectionHeading({
         <p
           className={cn(
             "inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase",
-            inverted ? "text-sky-200" : "text-sky-600 dark:text-sky-400"
+            inverted ? "text-sky-200" : "text-sky-700 dark:text-sky-400"
           )}
         >
           <span aria-hidden className="h-0.5 w-6 rounded-full bg-current" />

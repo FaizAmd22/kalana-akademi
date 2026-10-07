@@ -50,7 +50,7 @@ export function VisiMisiPage() {
 
       {/* Misi */}
       <div className="mt-14">
-        <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-sky-600 uppercase dark:text-sky-400">
+        <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-sky-700 uppercase dark:text-sky-400">
           <span aria-hidden className="h-0.5 w-6 rounded-full bg-current" />
           Misi
         </p>
@@ -64,12 +64,13 @@ export function VisiMisiPage() {
               key={text}
               className="group relative overflow-hidden rounded-2xl bg-card p-6 ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/20"
             >
+              {/* number via CSS content: purely decorative, so it is neither read
+                  out nor treated as low-contrast text */}
               <span
                 aria-hidden
-                className="absolute top-4 right-5 text-5xl font-bold text-primary/5 transition-colors group-hover:text-sky-500/15"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
+                data-num={String(i + 1).padStart(2, "0")}
+                className="absolute top-4 right-5 text-5xl font-bold text-primary/5 transition-colors group-hover:text-sky-500/15 before:content-[attr(data-num)]"
+              />
               <span className="flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-primary to-sky-600 text-primary-foreground shadow-md shadow-primary/20 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                 <Icon className="size-6" />
               </span>
