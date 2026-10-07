@@ -14,7 +14,7 @@ import {
 import { TENTANG_KAMI_PAGES, type NavMenuItem } from "@/lib/nav-links";
 import { instagramHandle } from "@/lib/social";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
-import logoImage from "@/assets/logo/logo.webp";
+import logoImage from "@/assets/logo/logo-white.webp";
 
 // Dropdown groups link to their "see all" page rather than the first category.
 function topLevelHref(item: NavMenuItem) {
@@ -93,16 +93,16 @@ export function Footer() {
         {/* Brand */}
         <div className="col-span-2 md:col-span-3 lg:col-span-4">
           <Link to="/" className="inline-flex items-center gap-3">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white p-0.5">
-              <img
-                src={logoImage}
-                alt=""
-                width={48}
-                height={48}
-                loading="lazy"
-                className="size-full rounded-full object-cover"
-              />
-            </span>
+            {/* white-on-transparent variant, made for the dark footer */}
+            <img
+              src={logoImage}
+              alt=""
+              width={48}
+              height={48}
+              loading="lazy"
+              decoding="async"
+              className="size-12 shrink-0"
+            />
             <span className="text-lg font-bold">Kalana Akademik</span>
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-primary-foreground/70">
