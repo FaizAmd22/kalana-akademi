@@ -63,7 +63,7 @@ export function Footer() {
           <ul className="space-y-1.5">
             <li>
               <Link
-                to="/tentang-kami#profil"
+                to="/tentang-kami/profil"
                 className="text-sm text-muted-foreground hover:text-foreground"
               >
                 Profil
@@ -71,7 +71,7 @@ export function Footer() {
             </li>
             <li>
               <Link
-                to="/tentang-kami#faq"
+                to="/tentang-kami/faq"
                 className="text-sm text-muted-foreground hover:text-foreground"
               >
                 FAQ

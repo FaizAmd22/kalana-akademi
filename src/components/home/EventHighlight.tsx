@@ -19,7 +19,7 @@ export function EventHighlight() {
           title="Kegiatan & Acara Terbaru"
         />
         <Link
-          to="/tentang-kami#event-kalana"
+          to="/tentang-kami/event-kalana"
           className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
           Lihat semua event <ArrowRightIcon className="size-4" />

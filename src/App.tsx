@@ -32,7 +32,14 @@ import { KontakPage } from "@/pages/KontakPage"
 import { NotFoundPage } from "@/pages/NotFoundPage"
 import { ProgramDetailPage } from "@/pages/program/ProgramDetailPage"
 import { ProgramListPage } from "@/pages/program/ProgramListPage"
+import { EventPage } from "@/pages/tentang/EventPage"
+import { FaqPage } from "@/pages/tentang/FaqPage"
+import { GaleriPage } from "@/pages/tentang/GaleriPage"
+import { ProfilPage } from "@/pages/tentang/ProfilPage"
 import { TentangKamiPage } from "@/pages/tentang/TentangKamiPage"
+import { TentorPage } from "@/pages/tentang/TentorPage"
+import { TestimoniPage } from "@/pages/tentang/TestimoniPage"
+import { VisiMisiPage } from "@/pages/tentang/VisiMisiPage"
 import { Toaster } from "@/components/ui/sonner"
 
 function App() {
@@ -49,6 +56,13 @@ function App() {
               <Route path="artikel/:id" element={<ArtikelDetailPage />} />
               <Route path="bank-soal" element={<BankSoalListPage />} />
               <Route path="tentang-kami" element={<TentangKamiPage />} />
+              <Route path="tentang-kami/profil" element={<ProfilPage />} />
+              <Route path="tentang-kami/visi-misi" element={<VisiMisiPage />} />
+              <Route path="tentang-kami/tentor" element={<TentorPage />} />
+              <Route path="tentang-kami/testimoni" element={<TestimoniPage />} />
+              <Route path="tentang-kami/faq" element={<FaqPage />} />
+              <Route path="tentang-kami/galeri" element={<GaleriPage />} />
+              <Route path="tentang-kami/event-kalana" element={<EventPage />} />
               <Route path="kontak" element={<KontakPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

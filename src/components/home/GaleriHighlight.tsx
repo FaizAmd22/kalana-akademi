@@ -16,7 +16,7 @@ export function GaleriHighlight() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading eyebrow="Galeri" title="Momen di Kalana Akademik" />
         <Link
-          to="/tentang-kami#galeri"
+          to="/tentang-kami/galeri"
           className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
           Lihat semua galeri <ArrowRightIcon className="size-4" />
