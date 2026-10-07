@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { auth } from "@/lib/firebase"
+import { auth } from "@/lib/firebase-auth"
 
 const loginSchema = z.object({
   email: z.string().email("Email tidak valid"),

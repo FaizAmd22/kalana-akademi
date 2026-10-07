@@ -22,15 +22,28 @@ const defaults: Settings = {
   instagramUrl: DEFAULT_INSTAGRAM_URL,
 }
 
+// Many components read the settings on the same page (navbar, CTA buttons,
+// footer, ...); share one request instead of fetching the document per
+// component. Cleared on failure and after an update.
+let cached: Promise<Settings> | null = null
+
 export const settingsService = {
-  async get(): Promise<Settings> {
-    const snap = await getDoc(settingsRef)
-    return snap.exists()
-      ? ({ ...defaults, ...snap.data(), id: SETTINGS_DOC_ID } as Settings)
-      : defaults
+  get(): Promise<Settings> {
+    if (!cached) {
+      cached = getDoc(settingsRef).then((snap) =>
+        snap.exists()
+          ? ({ ...defaults, ...snap.data(), id: SETTINGS_DOC_ID } as Settings)
+          : defaults
+      )
+      cached.catch(() => {
+        cached = null
+      })
+    }
+    return cached
   },
 
   async update(data: Partial<SettingsInput>): Promise<void> {
     await setDoc(settingsRef, data, { merge: true })
+    cached = null
   },
 }

@@ -26,7 +26,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useAuth } from "@/hooks/useAuth"
-import { auth } from "@/lib/firebase"
+import { auth } from "@/lib/firebase-auth"
 import { cn } from "@/lib/utils"
 
 const ADMIN_NAV = [

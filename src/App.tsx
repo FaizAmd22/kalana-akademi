@@ -1,151 +1,120 @@
+import { lazy, Suspense, useEffect, type ComponentType } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
-import { ProtectedRoute } from "@/components/admin/ProtectedRoute"
-import { AuthProvider } from "@/context/AuthContext"
-import { KategoriProvider } from "@/context/KategoriContext"
-import { AdminLayout } from "@/layouts/AdminLayout"
-import { PublicLayout } from "@/layouts/PublicLayout"
-import { AdminArtikelFormPage } from "@/pages/admin/artikel/ArtikelFormPage"
-import { AdminArtikelListPage } from "@/pages/admin/artikel/ArtikelListPage"
-import { AdminBankSoalFormPage } from "@/pages/admin/banksoal/BankSoalFormPage"
-import { AdminBankSoalListPage } from "@/pages/admin/banksoal/BankSoalListPage"
-import { AdminDashboardPage } from "@/pages/admin/DashboardPage"
-import { AdminEventFormPage } from "@/pages/admin/event/EventFormPage"
-import { AdminEventListPage } from "@/pages/admin/event/EventListPage"
-import { AdminFaqListPage } from "@/pages/admin/faq/FaqListPage"
-import { AdminGaleriFormPage } from "@/pages/admin/galeri/GaleriFormPage"
-import { AdminGaleriListPage } from "@/pages/admin/galeri/GaleriListPage"
-import { AdminKategoriListPage } from "@/pages/admin/kategori/KategoriListPage"
-import { AdminLoginPage } from "@/pages/admin/LoginPage"
-import { AdminPengaturanPage } from "@/pages/admin/pengaturan/PengaturanPage"
-import { AdminProgramFormPage } from "@/pages/admin/program/ProgramFormPage"
-import { AdminProgramListPage } from "@/pages/admin/program/ProgramListPage"
-import { AdminTentorFormPage } from "@/pages/admin/tentor/TentorFormPage"
-import { AdminTentorListPage } from "@/pages/admin/tentor/TentorListPage"
-import { AdminTestimoniFormPage } from "@/pages/admin/testimoni/TestimoniFormPage"
-import { AdminTestimoniListPage } from "@/pages/admin/testimoni/TestimoniListPage"
-import { ArtikelDetailPage } from "@/pages/artikel/ArtikelDetailPage"
-import { ArtikelListPage } from "@/pages/artikel/ArtikelListPage"
-import { BankSoalListPage } from "@/pages/banksoal/BankSoalListPage"
-import { HomePage } from "@/pages/HomePage"
-import { KontakPage } from "@/pages/KontakPage"
-import { NotFoundPage } from "@/pages/NotFoundPage"
-import { ProgramDetailPage } from "@/pages/program/ProgramDetailPage"
-import { ProgramListPage } from "@/pages/program/ProgramListPage"
-import { EventPage } from "@/pages/tentang/EventPage"
-import { FaqPage } from "@/pages/tentang/FaqPage"
-import { GaleriPage } from "@/pages/tentang/GaleriPage"
-import { ProfilPage } from "@/pages/tentang/ProfilPage"
-import { TentangKamiPage } from "@/pages/tentang/TentangKamiPage"
-import { TentorPage } from "@/pages/tentang/TentorPage"
-import { TestimoniPage } from "@/pages/tentang/TestimoniPage"
-import { VisiMisiPage } from "@/pages/tentang/VisiMisiPage"
 import { Toaster } from "@/components/ui/sonner"
+import { KategoriProvider } from "@/context/KategoriContext"
+import { PublicLayout } from "@/layouts/PublicLayout"
+// the landing page stays in the main bundle so it renders without an extra
+// round trip; every other page is its own chunk
+import { HomePage } from "@/pages/HomePage"
+
+// Public page chunks. Kept in one map so they can also be prefetched while
+// the browser is idle, which keeps navigation instant after the first load.
+const publicPages = {
+  ProgramListPage: () => import("@/pages/program/ProgramListPage"),
+  ProgramDetailPage: () => import("@/pages/program/ProgramDetailPage"),
+  ArtikelListPage: () => import("@/pages/artikel/ArtikelListPage"),
+  ArtikelDetailPage: () => import("@/pages/artikel/ArtikelDetailPage"),
+  BankSoalListPage: () => import("@/pages/banksoal/BankSoalListPage"),
+  TentangKamiPage: () => import("@/pages/tentang/TentangKamiPage"),
+  ProfilPage: () => import("@/pages/tentang/ProfilPage"),
+  VisiMisiPage: () => import("@/pages/tentang/VisiMisiPage"),
+  TentorPage: () => import("@/pages/tentang/TentorPage"),
+  TestimoniPage: () => import("@/pages/tentang/TestimoniPage"),
+  FaqPage: () => import("@/pages/tentang/FaqPage"),
+  GaleriPage: () => import("@/pages/tentang/GaleriPage"),
+  EventPage: () => import("@/pages/tentang/EventPage"),
+  KontakPage: () => import("@/pages/KontakPage"),
+  NotFoundPage: () => import("@/pages/NotFoundPage"),
+}
+
+type PageName = keyof typeof publicPages
+
+/** React.lazy for a page module that uses a named export. */
+function lazyPage(name: PageName) {
+  return lazy(() =>
+    publicPages[name]().then((module) => ({
+      default: (module as Record<string, ComponentType>)[name],
+    }))
+  )
+}
+
+const ProgramListPage = lazyPage("ProgramListPage")
+const ProgramDetailPage = lazyPage("ProgramDetailPage")
+const ArtikelListPage = lazyPage("ArtikelListPage")
+const ArtikelDetailPage = lazyPage("ArtikelDetailPage")
+const BankSoalListPage = lazyPage("BankSoalListPage")
+const TentangKamiPage = lazyPage("TentangKamiPage")
+const ProfilPage = lazyPage("ProfilPage")
+const VisiMisiPage = lazyPage("VisiMisiPage")
+const TentorPage = lazyPage("TentorPage")
+const TestimoniPage = lazyPage("TestimoniPage")
+const FaqPage = lazyPage("FaqPage")
+const GaleriPage = lazyPage("GaleriPage")
+const EventPage = lazyPage("EventPage")
+const KontakPage = lazyPage("KontakPage")
+const NotFoundPage = lazyPage("NotFoundPage")
+
+// the whole admin area (incl. Firebase Auth) as a single separate chunk
+const AdminRoutes = lazy(() => import("@/routes/AdminRoutes"))
+
+function AdminFallback() {
+  return (
+    <div className="flex min-h-svh items-center justify-center text-sm text-muted-foreground">
+      Memuat...
+    </div>
+  )
+}
+
+function usePrefetchPublicPages() {
+  useEffect(() => {
+    const prefetch = () => Object.values(publicPages).forEach((load) => load())
+    // after the landing page has settled, not competing with it
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(prefetch, { timeout: 5000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const id = setTimeout(prefetch, 3000)
+    return () => clearTimeout(id)
+  }, [])
+}
 
 function App() {
+  usePrefetchPublicPages()
+
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <KategoriProvider>
-          <Routes>
-            <Route element={<PublicLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="program" element={<ProgramListPage />} />
-              <Route path="program/:id" element={<ProgramDetailPage />} />
-              <Route path="artikel" element={<ArtikelListPage />} />
-              <Route path="artikel/:id" element={<ArtikelDetailPage />} />
-              <Route path="bank-soal" element={<BankSoalListPage />} />
-              <Route path="tentang-kami" element={<TentangKamiPage />} />
-              <Route path="tentang-kami/profil" element={<ProfilPage />} />
-              <Route path="tentang-kami/visi-misi" element={<VisiMisiPage />} />
-              <Route path="tentang-kami/tentor" element={<TentorPage />} />
-              <Route path="tentang-kami/testimoni" element={<TestimoniPage />} />
-              <Route path="tentang-kami/faq" element={<FaqPage />} />
-              <Route path="tentang-kami/galeri" element={<GaleriPage />} />
-              <Route path="tentang-kami/event-kalana" element={<EventPage />} />
-              <Route path="kontak" element={<KontakPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
+      <KategoriProvider>
+        <Routes>
+          <Route element={<PublicLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="program" element={<ProgramListPage />} />
+            <Route path="program/:id" element={<ProgramDetailPage />} />
+            <Route path="artikel" element={<ArtikelListPage />} />
+            <Route path="artikel/:id" element={<ArtikelDetailPage />} />
+            <Route path="bank-soal" element={<BankSoalListPage />} />
+            <Route path="tentang-kami" element={<TentangKamiPage />} />
+            <Route path="tentang-kami/profil" element={<ProfilPage />} />
+            <Route path="tentang-kami/visi-misi" element={<VisiMisiPage />} />
+            <Route path="tentang-kami/tentor" element={<TentorPage />} />
+            <Route path="tentang-kami/testimoni" element={<TestimoniPage />} />
+            <Route path="tentang-kami/faq" element={<FaqPage />} />
+            <Route path="tentang-kami/galeri" element={<GaleriPage />} />
+            <Route path="tentang-kami/event-kalana" element={<EventPage />} />
+            <Route path="kontak" element={<KontakPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
 
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboardPage />} />
-
-                <Route path="kategori" element={<AdminKategoriListPage />} />
-
-                <Route path="program" element={<AdminProgramListPage />} />
-                <Route
-                  path="program/baru"
-                  element={<AdminProgramFormPage />}
-                />
-                <Route
-                  path="program/:id/edit"
-                  element={<AdminProgramFormPage />}
-                />
-
-                <Route path="artikel" element={<AdminArtikelListPage />} />
-                <Route
-                  path="artikel/baru"
-                  element={<AdminArtikelFormPage />}
-                />
-                <Route
-                  path="artikel/:id/edit"
-                  element={<AdminArtikelFormPage />}
-                />
-
-                <Route path="bank-soal" element={<AdminBankSoalListPage />} />
-                <Route
-                  path="bank-soal/baru"
-                  element={<AdminBankSoalFormPage />}
-                />
-                <Route
-                  path="bank-soal/:id/edit"
-                  element={<AdminBankSoalFormPage />}
-                />
-
-                <Route path="faq" element={<AdminFaqListPage />} />
-
-                <Route
-                  path="testimoni"
-                  element={<AdminTestimoniListPage />}
-                />
-                <Route
-                  path="testimoni/baru"
-                  element={<AdminTestimoniFormPage />}
-                />
-                <Route
-                  path="testimoni/:id/edit"
-                  element={<AdminTestimoniFormPage />}
-                />
-
-                <Route path="tentor" element={<AdminTentorListPage />} />
-                <Route path="tentor/baru" element={<AdminTentorFormPage />} />
-                <Route
-                  path="tentor/:id/edit"
-                  element={<AdminTentorFormPage />}
-                />
-
-                <Route path="event" element={<AdminEventListPage />} />
-                <Route path="event/baru" element={<AdminEventFormPage />} />
-                <Route
-                  path="event/:id/edit"
-                  element={<AdminEventFormPage />}
-                />
-
-                <Route path="galeri" element={<AdminGaleriListPage />} />
-                <Route path="galeri/baru" element={<AdminGaleriFormPage />} />
-                <Route
-                  path="galeri/:id/edit"
-                  element={<AdminGaleriFormPage />}
-                />
-
-                <Route path="pengaturan" element={<AdminPengaturanPage />} />
-              </Route>
-            </Route>
-          </Routes>
-        </KategoriProvider>
-      </AuthProvider>
+          <Route
+            path="/admin/*"
+            element={
+              <Suspense fallback={<AdminFallback />}>
+                <AdminRoutes />
+              </Suspense>
+            }
+          />
+        </Routes>
+      </KategoriProvider>
       <Toaster />
     </BrowserRouter>
   )

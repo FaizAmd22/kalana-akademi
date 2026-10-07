@@ -1,5 +1,6 @@
-import { useEffect } from "react"
+import { Suspense, useEffect } from "react"
 import { Outlet, useLocation } from "react-router-dom"
+import { Loader2Icon } from "lucide-react"
 
 import { Navbar } from "@/components/navbar/Navbar"
 import { Footer } from "@/components/footer/Footer"
@@ -16,6 +17,17 @@ function ScrollToTopOnNavigate() {
   return null
 }
 
+// shown for a lazily loaded page whose chunk isn't cached yet; tall enough
+// that the footer doesn't jump up and back down
+function PageFallback() {
+  return (
+    <div className="flex min-h-[70vh] items-center justify-center">
+      <Loader2Icon className="size-6 animate-spin text-primary/60" />
+      <span className="sr-only">Memuat halaman...</span>
+    </div>
+  )
+}
+
 export function PublicLayout() {
   return (
     // overflow-x-clip (not hidden) so full-bleed sticky bars cannot cause a
@@ -24,7 +36,9 @@ export function PublicLayout() {
       <ScrollToTopOnNavigate />
       <Navbar />
       <main className="flex-1">
-        <Outlet />
+        <Suspense fallback={<PageFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </div>
