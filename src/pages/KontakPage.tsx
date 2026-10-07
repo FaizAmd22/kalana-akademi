@@ -258,7 +258,7 @@ export function KontakPage() {
                           }))}
                         >
                           <FormControl>
-                            <SelectTrigger className="h-11 w-full">
+                            <SelectTrigger className="w-full text-base data-[size=default]:h-11 md:text-sm">
                               <SelectValue placeholder="Pilih program" />
                             </SelectTrigger>
                           </FormControl>
@@ -283,9 +283,10 @@ export function KontakPage() {
                         <FormLabel>Pesan</FormLabel>
                         <FormControl>
                           <Textarea
-                            rows={5}
                             placeholder="Tuliskan pertanyaan atau kebutuhan belajarmu"
-                            className="resize-none"
+                            // fixed height; long messages scroll inside, and
+                            // it can still be dragged taller
+                            className="h-40 max-h-96 min-h-32 resize-y py-2.5 field-sizing-fixed"
                             {...field}
                           />
                         </FormControl>
