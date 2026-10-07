@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 interface AnimateOnScrollProps {
   children: ReactNode
-  /** animate.css animation name, without the "animate__" prefix. */
+  /** Animation name (fadeIn | fadeInUp | zoomIn), defined in index.css. */
   animation?: string
   /** Delay in ms before the animation starts, once in view. */
   delay?: number

@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import "animate.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -137,10 +136,28 @@
     }
 }
 /*
- * Softer scroll reveals. animate.css's fadeInUp slides an element by 100% of
- * its own height (huge for a whole card grid) and zoomIn starts at 30% scale;
- * these keep the same class names but move only a little.
+ * Scroll reveal animations used by <AnimateOnScroll>. These replace the
+ * animate.css library (only three of its animations were used) while keeping
+ * its class names: `animate__animated animate__<name>`. fadeInUp and zoomIn
+ * are deliberately subtler than animate.css's originals.
  */
+.animate__animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@keyframes kalana-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate__animated.animate__fadeIn {
+  animation-name: kalana-fade-in;
+}
 @keyframes kalana-fade-in-up {
   from {
     opacity: 0;
@@ -213,6 +230,11 @@
 .animate__animated .stagger > :nth-child(9n + 9) { animation-delay: 560ms; }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate__animated {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
   .stagger > *,
   .animate__animated .stagger > * {
     opacity: 1;
