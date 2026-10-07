@@ -12,7 +12,7 @@ export function GaleriHighlight() {
   if (!loading && (!items || items.length === 0)) return null
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12">
+    <section className="mx-auto max-w-6xl px-4 py-14 md:py-20">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading eyebrow="Galeri" title="Momen di Kalana Akademik" />
         <Link
@@ -31,7 +31,11 @@ export function GaleriHighlight() {
             ))}
           </div>
         ) : (
-          <GaleriGrid items={items!} />
+          // 3 rows of 2 is plenty on mobile
+          <GaleriGrid
+            items={items!}
+            className="max-sm:[&>*:nth-child(n+7)]:hidden"
+          />
         )}
       </div>
     </section>

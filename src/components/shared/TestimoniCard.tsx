@@ -1,7 +1,6 @@
-import { StarIcon } from "lucide-react"
+import { QuoteIcon, StarIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { Testimoni } from "@/types"
 
@@ -11,39 +10,49 @@ export function TestimoniCard({ testimoni }: { testimoni: Testimoni }) {
     .map((n) => n[0])
     .slice(0, 2)
     .join("")
+    .toUpperCase()
 
   return (
-    <Card className="h-full">
-      <CardContent className="flex h-full flex-col gap-3">
-        {testimoni.rating && (
-          <div className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <StarIcon
-                key={i}
-                className={cn(
-                  "size-4",
-                  i < testimoni.rating!
-                    ? "fill-primary text-primary"
-                    : "text-muted-foreground/30"
-                )}
-              />
-            ))}
-          </div>
-        )}
-        <p className="flex-1 text-sm text-muted-foreground">
-          "{testimoni.message}"
-        </p>
-        <div className="flex items-center gap-2.5">
-          <Avatar className="size-9">
-            <AvatarImage src={testimoni.image} alt={testimoni.name} />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">{testimoni.name}</p>
-            <p className="text-xs text-muted-foreground">{testimoni.role}</p>
-          </div>
+    <div className="relative flex h-full flex-col rounded-2xl bg-card p-5 text-card-foreground ring-1 ring-foreground/10 transition-shadow hover:shadow-lg hover:shadow-primary/10">
+      <QuoteIcon
+        aria-hidden
+        className="absolute top-4 right-4 size-8 text-primary/10"
+      />
+
+      {testimoni.rating ? (
+        <div className="flex gap-0.5" aria-label={`Rating ${testimoni.rating} dari 5`}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <StarIcon
+              key={i}
+              className={cn(
+                "size-4",
+                i < testimoni.rating!
+                  ? "fill-amber-400 text-amber-400"
+                  : "text-muted-foreground/25"
+              )}
+            />
+          ))}
         </div>
-      </CardContent>
-    </Card>
+      ) : null}
+
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/80">
+        “{testimoni.message}”
+      </p>
+
+      <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+        <Avatar className="size-10 ring-2 ring-accent">
+          <AvatarImage src={testimoni.image} alt={testimoni.name} />
+          <AvatarFallback className="bg-accent font-semibold text-primary">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold">{testimoni.name}</p>
+          <p className="truncate text-xs text-muted-foreground">
+            {testimoni.role}
+          </p>
+        </div>
+      </div>
+    </div>
   )
 }

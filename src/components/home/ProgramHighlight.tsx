@@ -31,7 +31,7 @@ export function ProgramHighlight() {
   if (!loading && highlighted.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12">
+    <section className="mx-auto max-w-6xl px-4 py-14 md:py-20">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
           eyebrow="Program Unggulan"
@@ -46,12 +46,13 @@ export function ProgramHighlight() {
         </Link>
       </div>
 
-      <div className="mt-6 flex flex-wrap justify-center gap-4">
+      {/* swipeable row on mobile, centred wrapping rows from sm up */}
+      <div className="stagger mt-6 -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0 sm:pb-0">
         {loading
           ? Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="w-full sm:basis-[calc((100%-1rem)/2)] lg:basis-[calc((100%-2rem)/3)]"
+                className="w-[85%] shrink-0 snap-start sm:w-full sm:shrink sm:basis-[calc((100%-1rem)/2)] lg:basis-[calc((100%-2rem)/3)]"
               >
                 <Skeleton className="h-72 w-full" />
               </div>
@@ -60,7 +61,7 @@ export function ProgramHighlight() {
               <div
                 key={program.id}
                 className={cn(
-                  "w-full sm:basis-[calc((100%-1rem)/2)]",
+                  "w-[85%] shrink-0 snap-start sm:w-full sm:shrink sm:basis-[calc((100%-1rem)/2)]",
                   twoColsOnly
                     ? "lg:basis-[calc((100%-1rem)/2)]"
                     : "lg:basis-[calc((100%-2rem)/3)]"

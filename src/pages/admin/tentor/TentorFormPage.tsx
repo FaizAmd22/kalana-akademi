@@ -123,8 +123,9 @@ export function AdminTentorFormPage() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Gunakan foto persegi (rasio 1:1), ukuran 600×600 hingga
-                  1000×1000 px, maksimal ±1 MB.
+                  Gunakan foto potret (rasio 4:5, mis. 800×1000 px) atau
+                  persegi, maksimal ±1 MB. Foto dipotong mengikuti bingkai
+                  kartu, jadi pastikan wajah ada di bagian atas/tengah.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

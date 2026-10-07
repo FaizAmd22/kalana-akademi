@@ -12,7 +12,7 @@ export function ArtikelTerbaru() {
   if (!loading && (!artikels || artikels.length === 0)) return null
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12">
+    <section className="mx-auto max-w-6xl px-4 py-14 md:py-20">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
           eyebrow="Artikel"
@@ -26,13 +26,22 @@ export function ArtikelTerbaru() {
         </Link>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* swipeable row on mobile, grid from sm up */}
+      <div className="stagger mt-6 -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-64 w-full" />
+              <Skeleton
+                key={i}
+                className="h-64 w-[80%] shrink-0 snap-start sm:w-full"
+              />
             ))
           : artikels!.map((artikel) => (
-              <ArtikelCard key={artikel.id} artikel={artikel} />
+              <div
+                key={artikel.id}
+                className="w-[80%] shrink-0 snap-start sm:w-auto"
+              >
+                <ArtikelCard artikel={artikel} />
+              </div>
             ))}
       </div>
     </section>

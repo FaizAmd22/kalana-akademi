@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { ArrowRightIcon } from "lucide-react"
 
 import {
   Card,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useKategori } from "@/hooks/useKategori"
+import { optimizeImage } from "@/lib/cloudinary"
 import type { Artikel } from "@/types"
 
 export function ArtikelCard({ artikel }: { artikel: Artikel }) {
@@ -16,23 +18,36 @@ export function ArtikelCard({ artikel }: { artikel: Artikel }) {
   const kategoriText = getLabel("artikel", artikel.kategori)
 
   return (
-    <Link to={`/artikel/${artikel.id}`}>
-      <Card className="h-full transition-shadow hover:shadow-md">
-        <img
-          src={artikel.image}
-          alt={artikel.title}
-          className="aspect-video w-full object-cover"
-        />
-        <CardHeader>
-          <Badge variant="outline" className="mb-1 w-fit">
+    <Link to={`/artikel/${artikel.id}`} className="group block h-full">
+      <Card className="h-full pt-0 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-primary/10 group-hover:ring-primary/20">
+        <div className="relative overflow-hidden">
+          <img
+            src={optimizeImage(artikel.image, 800)}
+            loading="lazy"
+            decoding="async"
+            alt={artikel.title}
+            className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <Badge
+            variant="secondary"
+            className="absolute top-3 left-3 bg-background/90 shadow-sm backdrop-blur"
+          >
             {kategoriText}
           </Badge>
-          <CardTitle className="line-clamp-2">{artikel.title}</CardTitle>
+        </div>
+        <CardHeader>
+          <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
+            {artikel.title}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 flex-col">
           <CardDescription className="line-clamp-3">
             {artikel.description}
           </CardDescription>
+          <span className="mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-primary">
+            Baca selengkapnya
+            <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+          </span>
         </CardContent>
       </Card>
     </Link>
