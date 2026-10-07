@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useKategori } from "@/hooks/useKategori"
 import { responsiveImage } from "@/lib/cloudinary"
+import { toPlainText } from "@/lib/rich-text"
 import type { Artikel } from "@/types"
 
 export function ArtikelCard({ artikel }: { artikel: Artikel }) {
@@ -46,7 +47,7 @@ export function ArtikelCard({ artikel }: { artikel: Artikel }) {
         </CardHeader>
         <CardContent className="flex flex-1 flex-col">
           <CardDescription className="line-clamp-3">
-            {artikel.description}
+            {toPlainText(artikel.description)}
           </CardDescription>
           <span className="mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-primary">
             Baca selengkapnya

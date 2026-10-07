@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import { ReadyToJoin } from "@/components/home/ReadyToJoin"
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon"
 import { AnimateOnScroll } from "@/components/shared/AnimateOnScroll"
+import { ArticleContent } from "@/components/shared/ArticleContent"
 import { ArtikelCard } from "@/components/shared/ArtikelCard"
 import { CardCarousel } from "@/components/shared/CardCarousel"
 import { PageHero } from "@/components/shared/PageHero"
@@ -18,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useArtikelById, useArtikelLatest } from "@/hooks/useArtikel"
 import { useKategori } from "@/hooks/useKategori"
 import { responsiveImage } from "@/lib/cloudinary"
+import { toPlainText } from "@/lib/rich-text"
 
 const WORDS_PER_MINUTE = 200
 const OTHERS_COUNT = 6
@@ -60,12 +62,8 @@ export function ArtikelDetailPage() {
     month: "long",
     year: "numeric",
   })
-  const words = artikel.description.trim().split(/\s+/).length
+  const words = toPlainText(artikel.description).split(/\s+/).filter(Boolean).length
   const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE))
-  const paragraphs = artikel.description
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean)
   const others = (latest ?? []).filter((a) => a.id !== artikel.id).slice(0, OTHERS_COUNT)
 
   const pageUrl = window.location.href
@@ -115,16 +113,7 @@ export function ArtikelDetailPage() {
             />
           )}
 
-          <div className="mt-8 space-y-5 text-base leading-relaxed text-foreground/85 md:text-lg md:leading-relaxed">
-            {paragraphs.map((p, i) => (
-              <p
-                key={i}
-                className="whitespace-pre-line first:first-letter:float-left first:first-letter:mr-2 first:first-letter:text-5xl first:first-letter:leading-none first:first-letter:font-bold first:first-letter:text-primary"
-              >
-                {p}
-              </p>
-            ))}
-          </div>
+          <ArticleContent value={artikel.description} className="mt-8" />
 
           {/* share */}
           <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-border pt-6">
