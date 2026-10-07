@@ -1,4 +1,4 @@
-export type KategoriTipe = "program" | "banksoal" | "artikel"
+export type KategoriTipe = "program" | "banksoal" | "artikel" | "tentor"
 
 export interface Kategori {
   id: string

@@ -20,6 +20,8 @@ import { AdminLoginPage } from "@/pages/admin/LoginPage"
 import { AdminPengaturanPage } from "@/pages/admin/pengaturan/PengaturanPage"
 import { AdminProgramFormPage } from "@/pages/admin/program/ProgramFormPage"
 import { AdminProgramListPage } from "@/pages/admin/program/ProgramListPage"
+import { AdminTentorFormPage } from "@/pages/admin/tentor/TentorFormPage"
+import { AdminTentorListPage } from "@/pages/admin/tentor/TentorListPage"
 import { AdminTestimoniFormPage } from "@/pages/admin/testimoni/TestimoniFormPage"
 import { AdminTestimoniListPage } from "@/pages/admin/testimoni/TestimoniListPage"
 import { ArtikelDetailPage } from "@/pages/artikel/ArtikelDetailPage"
@@ -101,6 +103,13 @@ function App() {
                 <Route
                   path="testimoni/:id/edit"
                   element={<AdminTestimoniFormPage />}
+                />
+
+                <Route path="tentor" element={<AdminTentorListPage />} />
+                <Route path="tentor/baru" element={<AdminTentorFormPage />} />
+                <Route
+                  path="tentor/:id/edit"
+                  element={<AdminTentorFormPage />}
                 />
 
                 <Route path="event" element={<AdminEventListPage />} />

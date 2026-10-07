@@ -14,6 +14,7 @@ import {
   MessageSquareQuoteIcon,
   SettingsIcon,
   TagsIcon,
+  UsersIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -36,6 +37,7 @@ const ADMIN_NAV = [
   { label: "Bank Soal", to: "/admin/bank-soal", icon: GalleryHorizontalIcon },
   { label: "FAQ", to: "/admin/faq", icon: HelpCircleIcon },
   { label: "Testimoni", to: "/admin/testimoni", icon: MessageSquareQuoteIcon },
+  { label: "Tentor", to: "/admin/tentor", icon: UsersIcon },
   { label: "Event Kalana", to: "/admin/event", icon: CalendarDaysIcon },
   { label: "Galeri", to: "/admin/galeri", icon: ImageIcon },
   { label: "Pengaturan", to: "/admin/pengaturan", icon: SettingsIcon },

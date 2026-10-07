@@ -33,4 +33,8 @@ export const SEED_KATEGORI: KategoriInput[] = [
   { tipe: "artikel", value: "utbk", label: "UTBK", order: 2 },
   { tipe: "artikel", value: "olimpiade", label: "Olimpiade", order: 3 },
   { tipe: "artikel", value: "berita-kalana", label: "Berita Kalana", order: 4 },
+
+  { tipe: "tentor", value: "board", label: "Board", order: 1 },
+  { tipe: "tentor", value: "mentor", label: "Mentor", order: 2 },
+  { tipe: "tentor", value: "educator", label: "Educator", order: 3 },
 ]
