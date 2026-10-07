@@ -4,6 +4,7 @@ import { AnimateOnScroll } from "@/components/shared/AnimateOnScroll"
 import { BankSoalCard } from "@/components/shared/BankSoalCard"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { SectionHeading } from "@/components/shared/SectionHeading"
+import { StickyFilterBar } from "@/components/shared/StickyFilterBar"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useBankSoalList } from "@/hooks/useBankSoal"
@@ -19,15 +20,19 @@ export function BankSoalListPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
-      <AnimateOnScroll animation="fadeInUp">
+      <AnimateOnScroll animation="fadeInUp" className="mb-3">
         <SectionHeading
           eyebrow="Bank Soal"
           title="Bank Soal Latihan"
           description="Latihan soal lengkap dengan pembahasan untuk persiapan ujian."
         />
+      </AnimateOnScroll>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+      <StickyFilterBar>
+        {/* single scrollable row on mobile keeps the sticky bar short */}
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
           <Badge
+            className="shrink-0"
             variant={!label ? "default" : "outline"}
             render={<Link to="/bank-soal" />}
           >
@@ -36,6 +41,7 @@ export function BankSoalListPage() {
           {labelOptions.map((l) => (
             <Badge
               key={l.value}
+              className="shrink-0"
               variant={label === l.value ? "default" : "outline"}
               render={<Link to={`/bank-soal?label=${l.value}`} />}
             >
@@ -43,20 +49,20 @@ export function BankSoalListPage() {
             </Badge>
           ))}
         </div>
-      </AnimateOnScroll>
+      </StickyFilterBar>
 
       {loading ? (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-48 w-full" />
           ))}
         </div>
       ) : error || !items || items.length === 0 ? (
-        <div className="mt-6">
+        <div className="mt-3">
           <EmptyState description="Bank soal untuk kategori ini belum tersedia." />
         </div>
       ) : (
-        <AnimateOnScroll animation="fadeInUp" className="mt-6">
+        <AnimateOnScroll animation="fadeInUp" className="mt-3">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => (
               <BankSoalCard key={item.id} bankSoal={item} />
